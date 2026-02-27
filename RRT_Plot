@@ -1,0 +1,45 @@
+# Histogram_DensityPlot_QQplt_RRT
+RRT<-ggplot(data=data, aes(x=RRT)) +
+   geom_histogram(binwidth = 50) +
+   scale_x_continuous(name="RRT", breaks=seq(0,4500,500)) +
+   scale_y_continuous(name="Count", breaks=seq(0,600,100))+
+   coord_cartesian(xlim = c(0, 4500), ylim = c(0,600))
+ggplotly(RRT)
+
+RRT1 <- ggplot(data=data, aes(x=RRT)) + 
+   geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth = 5000) +
+   geom_density(alpha=.5, fill="red") +
+   scale_x_continuous(name="RRT ", breaks=seq(0,4500,5000), limits=c(0,4500)) 
+ggplotly(RRT1)
+
+qqnorm(data$RRT, main = "RRT"); qqline(data$RRT)
+
+shapiro.test(data$RRT)
+#################################################
+Shapiro-Wilk normality test
+data:  data$RRT
+W = 0.86511, p-value < 2.2e-16
+#################################################
+
+# Histogram_DensityPlot_qqplot_RRT_log
+RRT_log<-ggplot(data=data, aes(x=RRT_log)) +
+   geom_histogram(binwidth = 0.5) +
+   scale_x_continuous(name="RRT_log", breaks=seq(0,10,0.5)) +
+   scale_y_continuous(name="Count", breaks=seq(0,300,10))+
+   coord_cartesian(xlim = c(0,10), ylim = c(0,300))
+ggplotly(RRT_log)
+
+RRT_log_1 <- ggplot(data=data, aes(x=RRT_log)) + 
+   geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth = 0.5) +
+   geom_density(alpha=.5, fill="blue") +
+   scale_x_continuous(name="RRT_log", breaks=seq(0,10,0.5), limits=c(0,10)) 
+ggplotly(RRT_log_1)
+
+qqnorm(data$RRT_log, main = "RRT_log"); qqline(data$RRT_log)
+shapiro.test(data$RRT_log)
+#################################################
+Shapiro-Wilk normality test
+data:  data$RRT
+W = 0.72117, p-value < 2.2e-16
+#################################################
+
