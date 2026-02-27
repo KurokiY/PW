@@ -1,0 +1,105 @@
+setwd("/Users/yusukekuroki/Desktop")
+getwd()
+read.csv(“ps.csv”, header = TRUE)
+
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+library(writexl)
+
+
+data <- dat %>%
+     mutate(
+         FC  = suppressWarnings(as.numeric(FC)),
+         RPD = suppressWarnings(as.numeric(RPD)),
+         RRT = suppressWarnings(as.numeric(RRT)),
+         FFD = suppressWarnings(as.numeric(FFD)),
+         RFD = suppressWarnings(as.numeric(RFD))
+     )
+
+data$FC_log <- log(data$FC + 1)
+data$FFD_log <- log(data$FFD + 1)
+data$RFD_log <- log(data$RFD + 1)
+data$RPD_log <- log(data$RPD + 1)
+data$RRT_log <- log(data$RRT + 1)
+
+
+Result <- data%>%
+  pivot_longer(cols = c(FC, RPD, RRT, FFD, RFD),
+    names_to  = "variable",
+    values_to = "A") %>%
+  filter(!is.na(A)) %>%
+  group_by(variable) %>%
+  summarise(
+    n = n(),
+    mean_score    = mean(A, na.rm = TRUE),
+    sd_score      = sd(A, na.rm = TRUE),
+    median_score  = median(A, na.rm = TRUE),
+    min_score     = min(A, na.rm = TRUE),
+    max_score     = max(A, na.rm = TRUE),
+    skew          = moments::skewness(A, na.rm = TRUE),
+    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
+  ) %>%
+  mutate(
+    CI_lower = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[1])),
+    CI_upper = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[2]))
+  ) %>%
+  select(-t_test) %>%
+arrange(variable)
+
+Result
+
+write_xlsx(Result, path = "~/Desktop/descriptive.xlsx")
+
+Result_log <- data%>%
+  pivot_longer(cols = c(FC, FC_log, RPD, RPD_log, RRT, RRT_log, FFD, FFD_log, RFD, RFD_log),
+    names_to  = "variable",
+    values_to = "A") %>%
+  filter(!is.na(A)) %>%
+  group_by(variable) %>%
+  summarise(
+    n = n(),
+    mean_score    = mean(A, na.rm = TRUE),
+    sd_score      = sd(A, na.rm = TRUE),
+    median_score  = median(A, na.rm = TRUE),
+    min_score     = min(A, na.rm = TRUE),
+    max_score     = max(A, na.rm = TRUE),
+    skew          = moments::skewness(A, na.rm = TRUE),
+    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
+  ) %>%
+  mutate(
+    CI_lower = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[1])),
+    CI_upper = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[2]))
+  ) %>%
+  select(-t_test) %>%
+arrange(variable)
+Result_log
+write_xlsx(Result_log, path = "~/Desktop/descriptives_log.xlsx")
+
+Result_log_Emotion <- data%>%
+  pivot_longer(cols = c(FC, FC_log, RPD, RPD_log, RRT, RRT_log, FFD, FFD_log, RFD, RFD_log),
+    names_to  = "variable",
+    values_to = "A") %>%
+  filter(!is.na(A)) %>%
+  group_by(variable,Emotion) %>%
+  summarise(
+    n = n(),
+    mean_score    = mean(A, na.rm = TRUE),
+    sd_score      = sd(A, na.rm = TRUE),
+    median_score  = median(A, na.rm = TRUE),
+    min_score     = min(A, na.rm = TRUE),
+    max_score     = max(A, na.rm = TRUE),
+    skew          = moments::skewness(A, na.rm = TRUE),
+    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
+  ) %>%
+  mutate(
+    CI_lower = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[1])),
+    CI_upper = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[2]))
+  ) %>%
+  select(-t_test) %>%
+arrange(variable)
+Result_log_Emotion
+write_xlsx(Result_log_Emotion, path = "~/Desktop/descriptives_log_Emotion.xlsx")
