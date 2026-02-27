@@ -32,7 +32,7 @@ ggplotly(FFD_log)
 
 FFD_log_1 <- ggplot(data=data, aes(x=FFD_log)) + 
    geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth = 0.5) +
-   geom_density(alpha=.5, fill="red") +
+   geom_density(alpha=.5, fill="blue") +
    scale_x_continuous(name="FFD_log", breaks=seq(3,7,0.5), limits=c(3,7)) 
 ggplotly(FFD_log_1)
 
