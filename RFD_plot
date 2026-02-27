@@ -1,0 +1,50 @@
+# Histogram_DensityPlot_QQplt_RFD
+RFD<-ggplot(data=data, aes(x=RFD)) +
+   geom_histogram(binwidth = 50) +
+   scale_x_continuous(name="RFD", breaks=seq(0,2400,200)) +
+   scale_y_continuous(name="Count", breaks=seq(0,600,100))+
+   coord_cartesian(xlim = c(0,2400), ylim = c(0,600))
+ggplotly(RFD)
+
+RFD1 <- ggplot(data=data, aes(x=RFD)) + 
+   geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth = 100) +
+   geom_density(alpha=.5, fill="red") +
+   scale_x_continuous(name="RFD ", breaks=seq(0,2400,100), limits=c(0,1000)) 
+ggplotly(RFD1)
+
+qqnorm(data$RFD, main = "RFD"); qqline(data$RFD)
+
+shapiro.test(data$RFD)
+###############################
+Shapiro-Wilk normality test
+data: data$RFD
+W = 0.58784, p-value < 2.2e-16
+###############################
+
+# Histogram_DensityPlot_qqplot_RFD_log
+RFD_log<-ggplot(data=data, aes(x=RFD_log)) +
+   geom_histogram(binwidth = 0.25) +
+   scale_x_continuous(name="RFD_log", breaks=seq(4,7,0.5)) +
+   scale_y_continuous(name="Count", breaks=seq(0,300,10))+
+   coord_cartesian(xlim = c(4,7), ylim = c(0,300))
+ggplotly(RFD_log)
+
+RFD_log_1 <- ggplot(data=data, aes(x=RFD_log)) + 
+   geom_histogram(aes(y=..density..), colour="black", fill="white", binwidth = 0.5) +
+   geom_density(alpha=.5, fill="blue") +
+   scale_x_continuous(name="RFD_log", breaks=seq(0,8,0.5), limits=c(0,8)) 
+ggplotly(RFD_log_1)
+
+
+qqnorm(data$RFD_log, main = "RFD_log"); qqline(data$RFD_log)
+shapiro.test(data$RFD_log)
+
+###############################
+Shapiro-Wilk normality test
+data: data$RFD_log
+W = 0.68813, p-value < 2.2e-16
+##################################
+
+
+> sum(data$RFD == 0, na.rm = TRUE)
+[1] 509
