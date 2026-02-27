@@ -32,13 +32,13 @@ Result <- data%>%
   group_by(variable) %>%
   summarise(
     n = n(),
-    mean_score    = mean(A, na.rm = TRUE),
-    sd_score      = sd(A, na.rm = TRUE),
-    median_score  = median(A, na.rm = TRUE),
-    min_score     = min(A, na.rm = TRUE),
-    max_score     = max(A, na.rm = TRUE),
-    skew          = moments::skewness(A, na.rm = TRUE),
-    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    mean    = mean(A, na.rm = TRUE),
+    sd      = sd(A, na.rm = TRUE),
+    median  = median(A, na.rm = TRUE),
+    min     = min(A, na.rm = TRUE),
+    max     = max(A, na.rm = TRUE),
+    skewness          = moments::skewness(A, na.rm = TRUE),
+    kurtosis          = moments::kurtosis(A, na.rm = TRUE),
     t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
   ) %>%
   mutate(
@@ -60,13 +60,13 @@ Result_log <- data%>%
   group_by(variable) %>%
   summarise(
     n = n(),
-    mean_score    = mean(A, na.rm = TRUE),
-    sd_score      = sd(A, na.rm = TRUE),
-    median_score  = median(A, na.rm = TRUE),
-    min_score     = min(A, na.rm = TRUE),
-    max_score     = max(A, na.rm = TRUE),
-    skew          = moments::skewness(A, na.rm = TRUE),
-    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    mean    = mean(A, na.rm = TRUE),
+    sd      = sd(A, na.rm = TRUE),
+    median  = median(A, na.rm = TRUE),
+    min     = min(A, na.rm = TRUE),
+    max     = max(A, na.rm = TRUE),
+    skewness          = moments::skewness(A, na.rm = TRUE),
+    kurtosis          = moments::kurtosis(A, na.rm = TRUE),
     t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
   ) %>%
   mutate(
@@ -86,13 +86,13 @@ Result_log_Emotion <- data%>%
   group_by(variable,Emotion) %>%
   summarise(
     n = n(),
-    mean_score    = mean(A, na.rm = TRUE),
-    sd_score      = sd(A, na.rm = TRUE),
-    median_score  = median(A, na.rm = TRUE),
-    min_score     = min(A, na.rm = TRUE),
-    max_score     = max(A, na.rm = TRUE),
-    skew          = moments::skewness(A, na.rm = TRUE),
-    kurt          = moments::kurtosis(A, na.rm = TRUE),
+    mean    = mean(A, na.rm = TRUE),
+    sd      = sd(A, na.rm = TRUE),
+    median  = median(A, na.rm = TRUE),
+    min     = min(A, na.rm = TRUE),
+    max     = max(A, na.rm = TRUE),
+    skewness          = moments::skewness(A, na.rm = TRUE),
+    kurtosis          = moments::kurtosis(A, na.rm = TRUE),
     t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
   ) %>%
   mutate(
@@ -103,3 +103,8 @@ Result_log_Emotion <- data%>%
 arrange(variable)
 Result_log_Emotion
 write_xlsx(Result_log_Emotion, path = "~/Desktop/descriptives_log_Emotion.xlsx")
+
+x <- data$FC
+m  <- mean(x, na.rm = TRUE)
+sd <- sd(x, na.rm = TRUE)
+clean_x <- x[ abs(x - m) <= 3.5 * sd ]
