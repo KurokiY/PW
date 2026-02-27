@@ -104,6 +104,59 @@ arrange(variable)
 Result_log_Emotion
 write_xlsx(Result_log_Emotion, path = "~/Desktop/descriptives_log_Emotion.xlsx")
 
+Result_p <- data%>%
+  pivot_longer(cols = c(FC, FC_log, RPD, RPD_log, RRT, RRT_log, FFD, FFD_log, RFD, RFD_log),
+    names_to  = "variable",
+    values_to = "A") %>%
+  filter(!is.na(A)) %>%
+  group_by(variable,Participant) %>%
+  summarise(
+    n = n(),
+    mean    = mean(A, na.rm = TRUE),
+    sd      = sd(A, na.rm = TRUE),
+    median  = median(A, na.rm = TRUE),
+    min     = min(A, na.rm = TRUE),
+    max     = max(A, na.rm = TRUE),
+    skewness          = moments::skewness(A, na.rm = TRUE),
+    kurtosis          = moments::kurtosis(A, na.rm = TRUE),
+    t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
+  ) %>%
+  mutate(
+    CI_lower = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[1])),
+    CI_upper = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[2]))
+  ) %>%
+  select(-t_test) %>%
+arrange(Participant, variable)
+Result_p
+write_xlsx(Result_p, path = "~/Desktop/descriptives_participant.xlsx")
+
+Result_tw <- data%>%
+  pivot_longer(cols = c(FC, FC_log, RPD, RPD_log, RRT, RRT_log, FFD, FFD_log, RFD, RFD_log),
+    names_to  = "variable",
+    values_to = "A") %>%
+  filter(!is.na(A)) %>%
+  group_by(variable,IA_LABEL) %>%
+  summarise(
+    n = n(),
+    mean    = mean(A, na.rm = TRUE),
+    sd      = sd(A, na.rm = TRUE),
+    median  = median(A, na.rm = TRUE),
+    min     = min(A, na.rm = TRUE),
+    max     = max(A, na.rm = TRUE),
+    skewness          = moments::skewness(A, na.rm = TRUE),
+    kurtosis          = moments::kurtosis(A, na.rm = TRUE),
+    t_test        = list(if (n() >= 2) t.test(A, conf.level = 0.95) else NA)
+  ) %>%
+  mutate(
+    CI_lower = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[1])),
+    CI_upper = ifelse(is.na(t_test), NA_real_, sapply(t_test, function(x) x$conf.int[2]))
+  ) %>%
+  select(-t_test) %>%
+arrange(IA_LABEL, variable)
+Result_tw
+write_xlsx(Result_tw, path = "~/Desktop/descriptives_tw.xlsx")
+
+
 x <- data$FC
 m  <- mean(x, na.rm = TRUE)
 sd <- sd(x, na.rm = TRUE)
